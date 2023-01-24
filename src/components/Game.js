@@ -22,16 +22,25 @@ export default function Game() {
   const [position, setPosition] = useState({ x: "", y: "" });
   const [positions, setPositions] = useState({});
   const [menuPosition, setMenuPosition] = useState({ top: "", left: "" });
-  const [score, setScore] = useState("");
+  const [score, setScore] = useState(0);
 
   const imageRef = useRef();
 
   useEffect(() => {
-    let a = getLocationData().then((result) => setPositions(result));
+    getLocationData().then((result) => setPositions(result));
   }, []);
 
   function handleGetPosition(e) {
-    // setPosition({ x: xPosition, y: yPosition });
+    let X = e.pageX;
+    let Y = e.pageY;
+    const width = imageRef.current.offsetWidth;
+    const height = imageRef.current.offsetHeight;
+
+    let xPosition = ((X / width) * 100).toFixed(2);
+    let yPosition = (((Y - 50) / height) * 100).toFixed(2);
+    let newPosition = { x: xPosition, y: yPosition };
+    console.log(newPosition);
+    setPosition(newPosition);
   }
 
   function handleOpenMenu(e) {
@@ -40,7 +49,33 @@ export default function Game() {
     setMenuPosition({ top: currentTop, left: currentLeft });
   }
 
-  function handleCompareValues(e, name) {
+  function handlePlayerSelection(name) {
+    function increaseScore() {
+      let newScore = Number(score) + 1;
+      setScore(newScore);
+    }
+
+    positions.forEach((el) => {
+      if (el.name === name) {
+        position.x >= 1 &&
+          position.x <= 5 &&
+          position.y >= 1 &&
+          position.y <= 5 &&
+          increaseScore();
+      }
+    });
+  }
+
+  function handleMouseClick(e) {
+    handlePosition(e);
+    handlePlayerSelection("vash");
+
+    // handleGetPosition(e);
+    // handleOpenMenu(e);
+    // handlePlayerSelection(e, "vash");
+  }
+
+  function handlePosition(e) {
     let X = e.pageX;
     let Y = e.pageY;
     const width = imageRef.current.offsetWidth;
@@ -48,39 +83,30 @@ export default function Game() {
 
     let xPosition = ((X / width) * 100).toFixed(2);
     let yPosition = (((Y - 50) / height) * 100).toFixed(2);
+    let newPosition = { x: xPosition, y: yPosition };
 
-    positions.forEach((el) => {
-      if (el.name === name) {
-        xPosition >= el.xMin &&
-          xPosition <= el.xMax &&
-          yPosition >= el.yMin &&
-          yPosition <= el.yMax &&
-          setScore(score + 1);
-      }
-    });
-  }
-
-  function handleMouseClick(e) {
-    handleGetPosition(e);
-    handleOpenMenu(e);
-    handleCompareValues(e, "vash");
+    setPosition(newPosition);
   }
 
   return (
     <div className='background-container'>
-      <Menu top={menuPosition.top} left={menuPosition.left}>
+      {/* <Menu top={menuPosition.top} left={menuPosition.left}>
         <ul>
-          <ListItem onClick={(e) => handleCompareValues(e, "catbus")}>
+          <ListItem onClick={(e) => handlePlayerSelection(e, "catbus")}>
             Catbus
           </ListItem>
-          <ListItem onClick={(e) => handleCompareValues(e, "makoto")}>
+          <ListItem onClick={(e) => handlePlayerSelection(e, "makoto")}>
             Makoto
           </ListItem>
-          <ListItem onClick={(e) => handleCompareValues(e, "vash")}>
+          <ListItem onClick={(e) => handlePlayerSelection(e, "vash")}>
             Vash
           </ListItem>
         </ul>
-      </Menu>
+      </Menu> */}
+      <>
+        {position.x} e {position.y}
+      </>
+      <br />
       <>{score}</>
       <img
         src={require("../Assets/Images/egor-klyuchnyk-full-x-season-web.jpg")}
