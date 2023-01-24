@@ -1,3 +1,7 @@
 .background {
   width: 100%;
 }
+
+.background-container {
+  position: relative;
+}
