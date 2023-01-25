@@ -4,18 +4,35 @@ import styled from "styled-components";
 
 import "../Assets/styles/Game.css";
 
+const BackgroundContainer = styled.div`
+  position: relative;
+`;
+
 const Menu = styled.h1`
-  background: white;
+  background-color: rgba(255, 255, 255, 0.5);
   width: 200px;
   height: 250px;
   z-index: 999;
   position: absolute;
   top: ${(props) => props.top};
   left: ${(props) => props.left};
+  display: ${(props) => props.display};
 `;
 
 const ListItem = styled.li`
   list-style: none;
+  cursor: pointer;
+  opacity: 1;
+`;
+
+const Marker = styled.p`
+  z-index: 9;
+  background: none;
+  color: red;
+  font-size: 200px;
+  position: absolute;
+  top: ${(props) => props.top};
+  left: ${(props) => props.left};
 `;
 
 export default function Game() {
@@ -23,6 +40,8 @@ export default function Game() {
   const [positions, setPositions] = useState({});
   const [menuPosition, setMenuPosition] = useState({ top: "", left: "" });
   const [score, setScore] = useState(0);
+  const [display, setDisplay] = useState("block");
+  const [markers, setMarkers] = useState([]);
 
   const imageRef = useRef();
 
@@ -30,7 +49,7 @@ export default function Game() {
     getLocationData().then((result) => setPositions(result));
   }, []);
 
-  function handleGetPosition(e) {
+  function handlePosition(e) {
     let X = e.pageX;
     let Y = e.pageY;
     const width = imageRef.current.offsetWidth;
@@ -39,7 +58,7 @@ export default function Game() {
     let xPosition = ((X / width) * 100).toFixed(2);
     let yPosition = (((Y - 50) / height) * 100).toFixed(2);
     let newPosition = { x: xPosition, y: yPosition };
-    console.log(newPosition);
+
     setPosition(newPosition);
   }
 
@@ -55,59 +74,58 @@ export default function Game() {
       setScore(newScore);
     }
 
+    // function addMarker() {
+    //   return;
+    // }
+
     positions.forEach((el) => {
       if (el.name === name) {
-        position.x >= 1 &&
-          position.x <= 5 &&
-          position.y >= 1 &&
-          position.y <= 5 &&
+        position.x >= el.xMin &&
+          position.x <= el.xMax &&
+          position.y >= el.yMin &&
+          position.y <= el.yMax &&
           increaseScore();
       }
     });
   }
 
-  function handleMouseClick(e) {
-    handlePosition(e);
-    handlePlayerSelection("vash");
-
-    // handleGetPosition(e);
-    // handleOpenMenu(e);
-    // handlePlayerSelection(e, "vash");
+  function handleCancel() {
+    display === "block" ? setDisplay("none") : setDisplay("block");
   }
 
-  function handlePosition(e) {
-    let X = e.pageX;
-    let Y = e.pageY;
-    const width = imageRef.current.offsetWidth;
-    const height = imageRef.current.offsetHeight;
-
-    let xPosition = ((X / width) * 100).toFixed(2);
-    let yPosition = (((Y - 50) / height) * 100).toFixed(2);
-    let newPosition = { x: xPosition, y: yPosition };
-
-    setPosition(newPosition);
+  function handleMouseClick(e) {
+    handlePosition(e);
+    handleOpenMenu(e);
+    display === "none" && setDisplay("block");
   }
 
   return (
-    <div className='background-container'>
-      {/* <Menu top={menuPosition.top} left={menuPosition.left}>
+    <BackgroundContainer>
+      <Menu top={menuPosition.top} left={menuPosition.left} display={display}>
         <ul>
-          <ListItem onClick={(e) => handlePlayerSelection(e, "catbus")}>
+          <ListItem onClick={() => handlePlayerSelection("catbus")}>
             Catbus
           </ListItem>
-          <ListItem onClick={(e) => handlePlayerSelection(e, "makoto")}>
+          <ListItem onClick={() => handlePlayerSelection("makoto")}>
             Makoto
           </ListItem>
-          <ListItem onClick={(e) => handlePlayerSelection(e, "vash")}>
+          <ListItem onClick={() => handlePlayerSelection("vash")}>
             Vash
           </ListItem>
+          <ListItem onClick={() => handleCancel()}>Cancel</ListItem>
         </ul>
-      </Menu> */}
-      <>
-        {position.x} e {position.y}
-      </>
+        <>Score: {score}</>
+        <br />
+        <>
+          {position.x} e {position.y}
+        </>
+      </Menu>
+
       <br />
       <>{score}</>
+      <Marker top={`${position.y}%`} left={`${position.x}%`}>
+        X
+      </Marker>
       <img
         src={require("../Assets/Images/egor-klyuchnyk-full-x-season-web.jpg")}
         alt='background with sci-fi characters'
@@ -117,6 +135,6 @@ export default function Game() {
         }}
         ref={imageRef}
       />
-    </div>
+    </BackgroundContainer>
   );
 }
