@@ -3,36 +3,21 @@ import getLocationData from "./data/getLocationData";
 import styled from "styled-components";
 
 import "../Assets/styles/Game.css";
+import Menu from "./Menu";
 
 const BackgroundContainer = styled.div`
   position: relative;
-`;
-
-const Menu = styled.h1`
-  background-color: rgba(255, 255, 255, 0.5);
-  width: 200px;
-  height: 250px;
-  z-index: 999;
-  position: absolute;
-  top: ${(props) => props.top};
-  left: ${(props) => props.left};
-  display: ${(props) => props.display};
-`;
-
-const ListItem = styled.li`
-  list-style: none;
-  cursor: pointer;
-  opacity: 1;
 `;
 
 const Marker = styled.p`
   z-index: 9;
   background: none;
   color: red;
-  font-size: 200px;
+  font-size: 75px;
   position: absolute;
   top: ${(props) => props.top};
   left: ${(props) => props.left};
+  display: ${(props) => props.display};
 `;
 
 export default function Game() {
@@ -41,7 +26,11 @@ export default function Game() {
   const [menuPosition, setMenuPosition] = useState({ top: "", left: "" });
   const [score, setScore] = useState(0);
   const [display, setDisplay] = useState("block");
-  const [markers, setMarkers] = useState([]);
+  const [markers, setMarkers] = useState([
+    { name: "catbus", x: "", y: "", display: "none" },
+    { name: "makoto", x: "", y: "", display: "none" },
+    { name: "vash", x: "", y: "", display: "none" },
+  ]);
 
   const imageRef = useRef();
 
@@ -73,10 +62,23 @@ export default function Game() {
       let newScore = Number(score) + 1;
       setScore(newScore);
     }
+    function addMarker() {
+      let markersCopy = [...markers];
+      markersCopy.forEach((el) => {
+        if (el.name === name) {
+          console.log(position.x);
+          el.x = position.x - 3.2;
+          el.y = position.y - 2.5;
+          el.display = "block";
+        }
+      });
+      setMarkers(markersCopy);
+    }
 
-    // function addMarker() {
-    //   return;
-    // }
+    function addMarkerAndIncreaseScore() {
+      addMarker();
+      increaseScore();
+    }
 
     positions.forEach((el) => {
       if (el.name === name) {
@@ -84,7 +86,7 @@ export default function Game() {
           position.x <= el.xMax &&
           position.y >= el.yMin &&
           position.y <= el.yMax &&
-          increaseScore();
+          addMarkerAndIncreaseScore();
       }
     });
   }
@@ -101,29 +103,36 @@ export default function Game() {
 
   return (
     <BackgroundContainer>
-      <Menu top={menuPosition.top} left={menuPosition.left} display={display}>
-        <ul>
-          <ListItem onClick={() => handlePlayerSelection("catbus")}>
-            Catbus
-          </ListItem>
-          <ListItem onClick={() => handlePlayerSelection("makoto")}>
-            Makoto
-          </ListItem>
-          <ListItem onClick={() => handlePlayerSelection("vash")}>
-            Vash
-          </ListItem>
-          <ListItem onClick={() => handleCancel()}>Cancel</ListItem>
-        </ul>
-        <>Score: {score}</>
-        <br />
-        <>
-          {position.x} e {position.y}
-        </>
-      </Menu>
+      <Menu
+        menuPosition={menuPosition}
+        display={display}
+        handlePlayerSelection={handlePlayerSelection}
+        handleCancel={handleCancel}
+        score={score}
+        position={position}
+      />
 
       <br />
       <>{score}</>
-      <Marker top={`${position.y}%`} left={`${position.x}%`}>
+      <Marker
+        top={`${markers[0].y}%`}
+        left={`${markers[0].x}%`}
+        display={markers[0].display}
+      >
+        X
+      </Marker>
+      <Marker
+        top={`${markers[1].y}%`}
+        left={`${markers[1].x}%`}
+        display={markers[1].display}
+      >
+        X
+      </Marker>
+      <Marker
+        top={`${markers[2].y}%`}
+        left={`${markers[2].x}%`}
+        display={markers[2].display}
+      >
         X
       </Marker>
       <img
