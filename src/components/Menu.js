@@ -35,7 +35,7 @@ export default function Menu(props) {
         <ListItem onClick={() => props.handlePlayerSelection("vash")}>
           Vash
         </ListItem>
-        {/* <ListItem onClick={() => props.handleCancel()}>Cancel</ListItem> */}
+        <ListItem onClick={() => props.handleCancel()}>Cancel</ListItem>
       </ul>
       <>Score: {props.score}</>
       <br />

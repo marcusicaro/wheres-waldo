@@ -25,7 +25,7 @@ export default function Game() {
   const [positions, setPositions] = useState({});
   const [menuPosition, setMenuPosition] = useState({ top: "", left: "" });
   const [score, setScore] = useState(0);
-  const [display, setDisplay] = useState("block");
+  const [display, setDisplay] = useState("none");
   const [markers, setMarkers] = useState([
     { name: "catbus", x: "", y: "", display: "none" },
     { name: "makoto", x: "", y: "", display: "none" },
@@ -60,6 +60,7 @@ export default function Game() {
   function handlePlayerSelection(name) {
     function increaseScore() {
       let newScore = Number(score) + 1;
+      newScore === 3 && alert("Game over you won");
       setScore(newScore);
     }
     function addMarker() {
@@ -68,7 +69,7 @@ export default function Game() {
         if (el.name === name) {
           console.log(position.x);
           el.x = position.x - 3.2;
-          el.y = position.y - 2.5;
+          el.y = position.y - 1;
           el.display = "block";
         }
       });
