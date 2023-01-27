@@ -1,9 +1,15 @@
 import React, { useRef, useState, useEffect } from "react";
 import getLocationData from "./data/getLocationData";
 import styled from "styled-components";
+import { db } from "./firebase/firebase";
+import {
+  doc,
+  setDoc,
+} from "firebase/firestore";
 
 import "../Assets/styles/Game.css";
 import Menu from "./Menu";
+import Header from "./Header";
 
 const BackgroundContainer = styled.div`
   position: relative;
@@ -25,6 +31,7 @@ export default function Game() {
   const [positions, setPositions] = useState({});
   const [menuPosition, setMenuPosition] = useState({ top: "", left: "" });
   const [score, setScore] = useState(0);
+  const [time, setTime] = useState('');
   const [display, setDisplay] = useState("none");
   const [markers, setMarkers] = useState([
     { name: "catbus", x: "", y: "", display: "none" },
@@ -102,8 +109,17 @@ export default function Game() {
     display === "none" && setDisplay("block");
   }
 
+  function handleEndGame(name, minutes, seconds){
+    const result = {name: name, time: `${minutes}:${seconds}`}
+    setTime(result);
+    console.log(result);
+    setDoc(doc(db, 'score', name), result);
+  }
+
   return (
-    <BackgroundContainer>
+    <>
+    <Header setTime={setTime} score={score} handleEndGame={handleEndGame} />
+        <BackgroundContainer>
       <Menu
         menuPosition={menuPosition}
         display={display}
@@ -146,5 +162,7 @@ export default function Game() {
         ref={imageRef}
       />
     </BackgroundContainer>
+    </>
+
   );
 }
