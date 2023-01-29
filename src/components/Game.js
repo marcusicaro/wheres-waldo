@@ -2,14 +2,12 @@ import React, { useRef, useState, useEffect } from "react";
 import getLocationData from "./data/getLocationData";
 import styled from "styled-components";
 import { db } from "./firebase/firebase";
-import {
-  doc,
-  setDoc,
-} from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 
 import "../Assets/styles/Game.css";
 import Menu from "./Menu";
 import Header from "./Header";
+import Leaderboard from "./Leaderboard";
 
 const BackgroundContainer = styled.div`
   position: relative;
@@ -31,7 +29,7 @@ export default function Game() {
   const [positions, setPositions] = useState({});
   const [menuPosition, setMenuPosition] = useState({ top: "", left: "" });
   const [score, setScore] = useState(0);
-  const [time, setTime] = useState('');
+  const [time, setTime] = useState("");
   const [display, setDisplay] = useState("none");
   const [markers, setMarkers] = useState([
     { name: "catbus", x: "", y: "", display: "none" },
@@ -109,60 +107,64 @@ export default function Game() {
     display === "none" && setDisplay("block");
   }
 
-  function handleEndGame(name, minutes, seconds){
-    const result = {name: name, time: `${minutes}:${seconds}`}
+  function handleEndGame(name, minutes, seconds) {
+    const result = {
+      name: name,
+      time: `${minutes}:${seconds}`,
+      score: `${minutes}${seconds}`,
+    };
     setTime(result);
     console.log(result);
-    setDoc(doc(db, 'score', name), result);
+    setDoc(doc(db, "leaderboard", name), result);
   }
 
   return (
     <>
-    <Header setTime={setTime} score={score} handleEndGame={handleEndGame} />
-        <BackgroundContainer>
-      <Menu
-        menuPosition={menuPosition}
-        display={display}
-        handlePlayerSelection={handlePlayerSelection}
-        handleCancel={handleCancel}
-        score={score}
-        position={position}
-      />
+      <Leaderboard />
+      <Header setTime={setTime} score={score} handleEndGame={handleEndGame} />
+      <BackgroundContainer>
+        <Menu
+          menuPosition={menuPosition}
+          display={display}
+          handlePlayerSelection={handlePlayerSelection}
+          handleCancel={handleCancel}
+          score={score}
+          position={position}
+        />
 
-      <br />
-      <>{score}</>
-      <Marker
-        top={`${markers[0].y}%`}
-        left={`${markers[0].x}%`}
-        display={markers[0].display}
-      >
-        X
-      </Marker>
-      <Marker
-        top={`${markers[1].y}%`}
-        left={`${markers[1].x}%`}
-        display={markers[1].display}
-      >
-        X
-      </Marker>
-      <Marker
-        top={`${markers[2].y}%`}
-        left={`${markers[2].x}%`}
-        display={markers[2].display}
-      >
-        X
-      </Marker>
-      <img
-        src={require("../Assets/Images/egor-klyuchnyk-full-x-season-web.jpg")}
-        alt='background with sci-fi characters'
-        className='background'
-        onClick={(e) => {
-          handleMouseClick(e);
-        }}
-        ref={imageRef}
-      />
-    </BackgroundContainer>
+        <br />
+        <>{score}</>
+        <Marker
+          top={`${markers[0].y}%`}
+          left={`${markers[0].x}%`}
+          display={markers[0].display}
+        >
+          X
+        </Marker>
+        <Marker
+          top={`${markers[1].y}%`}
+          left={`${markers[1].x}%`}
+          display={markers[1].display}
+        >
+          X
+        </Marker>
+        <Marker
+          top={`${markers[2].y}%`}
+          left={`${markers[2].x}%`}
+          display={markers[2].display}
+        >
+          X
+        </Marker>
+        <img
+          src={require("../Assets/Images/egor-klyuchnyk-full-x-season-web.jpg")}
+          alt='background with sci-fi characters'
+          className='background'
+          onClick={(e) => {
+            handleMouseClick(e);
+          }}
+          ref={imageRef}
+        />
+      </BackgroundContainer>
     </>
-
   );
 }
