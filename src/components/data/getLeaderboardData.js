@@ -1,4 +1,11 @@
-import { collection, query, doc, setDoc, getDocs } from "firebase/firestore";
+import {
+  collection,
+  query,
+  doc,
+  setDoc,
+  onSnapshot,
+  getDocs,
+} from "firebase/firestore";
 import { db } from "../firebase/firebase";
 
 export default async function getLeaderboardData() {

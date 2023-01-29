@@ -1,6 +1,13 @@
 import React, { useRef, useState, useEffect } from "react";
-import getLeaderboardData from "./data/getLeaderboardData";
-import { collection, getDocs } from "firebase/firestore";
+import {
+  query,
+  collection,
+  onSnapshot,
+  updateDoc,
+  doc,
+  setDoc,
+  deleteDoc,
+} from "firebase/firestore";
 import { db } from "./firebase/firebase";
 import styled from "styled-components";
 
@@ -22,7 +29,15 @@ export default function Leaderboard(props) {
   const [leaderboard, setLeaderboard] = useState([]);
 
   useEffect(() => {
-    getLeaderboardData().then((result) => setLeaderboard(result));
+    const q = query(collection(db, "leaderboard"));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      let scoresArr = [];
+      querySnapshot.forEach((doc) => {
+        scoresArr.push({ ...doc.data(), id: doc.id });
+      });
+      setLeaderboard(scoresArr);
+    });
+    return () => unsubscribe();
   }, []);
 
   function handleListRender() {
