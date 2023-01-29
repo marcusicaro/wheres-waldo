@@ -12,10 +12,19 @@ const Container = styled.h1`
   display: ${(props) => props.display};
 `;
 
+const ListContainer = styled.ul`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: space-around;
+  height: 250px;
+`;
+
 const ListItem = styled.li`
   list-style: none;
   cursor: pointer;
   opacity: 1;
+  text-align: center;
 `;
 
 export default function Menu(props) {
@@ -25,7 +34,7 @@ export default function Menu(props) {
       left={props.menuPosition.left}
       display={props.display}
     >
-      <ul>
+      <ListContainer>
         <ListItem onClick={() => props.handlePlayerSelection("catbus")}>
           Catbus
         </ListItem>
@@ -35,13 +44,10 @@ export default function Menu(props) {
         <ListItem onClick={() => props.handlePlayerSelection("vash")}>
           Vash
         </ListItem>
-        <ListItem onClick={() => props.handleCancel()}>Cancel</ListItem>
-      </ul>
-      <>Score: {props.score}</>
-      <br />
-      <>
-        {props.position.x} e {props.position.y}
-      </>
+        <ListItem style={{ color: "red" }} onClick={() => props.handleCancel()}>
+          Cancel
+        </ListItem>
+      </ListContainer>
     </Container>
   );
 }

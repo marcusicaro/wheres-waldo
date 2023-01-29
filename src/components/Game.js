@@ -31,6 +31,7 @@ export default function Game() {
   const [score, setScore] = useState(0);
   const [time, setTime] = useState("");
   const [display, setDisplay] = useState("none");
+  const [displayLeaderboard, setDisplayLeaderboard] = useState("none");
   const [markers, setMarkers] = useState([
     { name: "catbus", x: "", y: "", display: "none" },
     { name: "makoto", x: "", y: "", display: "none" },
@@ -65,7 +66,6 @@ export default function Game() {
   function handlePlayerSelection(name) {
     function increaseScore() {
       let newScore = Number(score) + 1;
-      newScore === 3 && alert("Game over you won");
       setScore(newScore);
     }
     function addMarker() {
@@ -114,13 +114,13 @@ export default function Game() {
       score: `${minutes}${seconds}`,
     };
     setTime(result);
-    console.log(result);
     setDoc(doc(db, "leaderboard", name), result);
+    setDisplayLeaderboard("block");
   }
 
   return (
     <>
-      <Leaderboard />
+      <Leaderboard displayLeaderboard={displayLeaderboard} />
       <Header setTime={setTime} score={score} handleEndGame={handleEndGame} />
       <BackgroundContainer>
         <Menu

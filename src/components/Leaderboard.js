@@ -15,9 +15,10 @@ const LeaderboardContainer = styled.ol`
   background: white;
   list-style-position: inside;
   text-align: center;
+  display: ${(props) => props.display};
 `;
 
-export default function Leaderboard() {
+export default function Leaderboard(props) {
   const [leaderboard, setLeaderboard] = useState([]);
 
   useEffect(() => {
@@ -28,13 +29,18 @@ export default function Leaderboard() {
     const orderedLeaderboard = leaderboard.sort((a, b) => {
       return a.score - b.score;
     });
+    orderedLeaderboard.length > 9 && orderedLeaderboard.shift();
     const table = orderedLeaderboard.map((el) => (
       <li key={el.name}>
-        <>{el.name}</>: <>{el.score}</>
+        <>{el.name}</>: <>{el.time}</>
       </li>
     ));
     return table;
   }
 
-  return <LeaderboardContainer>{handleListRender()}</LeaderboardContainer>;
+  return (
+    <LeaderboardContainer display={props.displayLeaderboard}>
+      {handleListRender()}
+    </LeaderboardContainer>
+  );
 }
