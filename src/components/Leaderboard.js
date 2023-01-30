@@ -23,6 +23,8 @@ const LeaderboardContainer = styled.ol`
   list-style-position: inside;
   text-align: center;
   display: ${(props) => props.display};
+  flex-direction: column;
+  justify-content: space-around;
 `;
 
 export default function Leaderboard(props) {
@@ -35,10 +37,15 @@ export default function Leaderboard(props) {
       querySnapshot.forEach((doc) => {
         scoresArr.push({ ...doc.data(), id: doc.id });
       });
+      scoresArr.length > 10 && scoresArr.pop();
       setLeaderboard(scoresArr);
     });
     return () => unsubscribe();
   }, []);
+
+  function refreshPage() {
+    window.location.reload(false);
+  }
 
   function handleListRender() {
     const orderedLeaderboard = leaderboard.sort((a, b) => {
@@ -56,6 +63,12 @@ export default function Leaderboard(props) {
   return (
     <LeaderboardContainer display={props.displayLeaderboard}>
       {handleListRender()}
+      <div
+        onClick={refreshPage}
+        style={{ color: "red", fontWeight: "25px", cursor: "pointer" }}
+      >
+        Retry
+      </div>
     </LeaderboardContainer>
   );
 }

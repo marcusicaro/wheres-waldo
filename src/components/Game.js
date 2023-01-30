@@ -58,7 +58,7 @@ export default function Game() {
   }
 
   function handleOpenMenu(e) {
-    let currentTop = `${e.pageY - 50}px`;
+    let currentTop = `${e.pageY}px`;
     let currentLeft = `${e.pageX}px`;
     setMenuPosition({ top: currentTop, left: currentLeft });
   }
@@ -72,9 +72,8 @@ export default function Game() {
       let markersCopy = [...markers];
       markersCopy.forEach((el) => {
         if (el.name === name) {
-          console.log(position.x);
-          el.x = position.x - 3.2;
-          el.y = position.y - 1;
+          el.x = position.x;
+          el.y = position.y;
           el.display = "block";
         }
       });
@@ -115,7 +114,7 @@ export default function Game() {
     };
     setTime(result);
     setDoc(doc(db, "leaderboard", name), result);
-    setDisplayLeaderboard("block");
+    setDisplayLeaderboard("flex");
   }
 
   return (
@@ -133,7 +132,6 @@ export default function Game() {
         />
 
         <br />
-        <>{score}</>
         <Marker
           top={`${markers[0].y}%`}
           left={`${markers[0].x}%`}

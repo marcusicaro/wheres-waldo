@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 
 const Background = styled.div`
-  background: grey;
+  background: white;
   height: 100vh;
   display: flex;
   justify-content: center;
@@ -11,13 +11,14 @@ const Background = styled.div`
 `;
 
 const Container = styled.div`
-  background: white;
+  background: grey;
   width: 250px;
   height: 400px;
   text-align: center;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
+  color: white;
 `;
 
 const Image = styled.img`
