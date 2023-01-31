@@ -42,14 +42,14 @@ export default function Game() {
     {
       name: "makoto",
       x: 57,
-      y: 57,
+      y: 57.5,
       display: "none",
       displayName: "Makoto",
     },
     {
       name: "vash",
-      x: 2,
-      y: 94,
+      x: 1.5,
+      y: 93.5,
       display: "none",
       displayName: "Vash",
     },
@@ -121,6 +121,20 @@ export default function Game() {
     display === "none" && setDisplay("block");
   }
 
+  function handleMarkersRender() {
+    const render = markers.map((el, index) => (
+      <Marker
+        top={`${markers[index].y}%`}
+        left={`${markers[index].x}%`}
+        display={markers[index].display}
+      >
+        X
+      </Marker>
+    ));
+
+    return render;
+  }
+
   function handleEndGame(name, minutes, seconds) {
     const result = {
       name: name,
@@ -147,27 +161,7 @@ export default function Game() {
         />
 
         <br />
-        <Marker
-          top={`${markers[0].y}%`}
-          left={`${markers[0].x}%`}
-          display={markers[0].display}
-        >
-          X
-        </Marker>
-        <Marker
-          top={`${markers[1].y}%`}
-          left={`${markers[1].x}%`}
-          display={markers[1].display}
-        >
-          X
-        </Marker>
-        <Marker
-          top={`${markers[2].y}%`}
-          left={`${markers[2].x}%`}
-          display={markers[2].display}
-        >
-          X
-        </Marker>
+        {handleMarkersRender()}
         <img
           src={require("../Assets/Images/egor-klyuchnyk-full-x-season-web.jpg")}
           alt='background with sci-fi characters'
