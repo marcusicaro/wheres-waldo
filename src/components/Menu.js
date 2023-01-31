@@ -28,6 +28,18 @@ const ListItem = styled.li`
 `;
 
 export default function Menu(props) {
+  function handleMenuRender() {
+    const render = props.markers.map(
+      (el) =>
+        el.display === "none" && (
+          <ListItem onClick={() => props.handlePlayerSelection(el.name)}>
+            {el.displayName}
+          </ListItem>
+        )
+    );
+    return render;
+  }
+
   return (
     <Container
       top={props.menuPosition.top}
@@ -35,15 +47,7 @@ export default function Menu(props) {
       display={props.display}
     >
       <ListContainer>
-        <ListItem onClick={() => props.handlePlayerSelection("catbus")}>
-          Catbus
-        </ListItem>
-        <ListItem onClick={() => props.handlePlayerSelection("makoto")}>
-          Makoto
-        </ListItem>
-        <ListItem onClick={() => props.handlePlayerSelection("vash")}>
-          Vash
-        </ListItem>
+        {handleMenuRender()}
         <ListItem style={{ color: "red" }} onClick={() => props.handleCancel()}>
           Cancel
         </ListItem>

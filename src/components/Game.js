@@ -29,13 +29,30 @@ export default function Game() {
   const [positions, setPositions] = useState({});
   const [menuPosition, setMenuPosition] = useState({ top: "", left: "" });
   const [score, setScore] = useState(0);
-  const [time, setTime] = useState("");
   const [display, setDisplay] = useState("none");
   const [displayLeaderboard, setDisplayLeaderboard] = useState("none");
   const [markers, setMarkers] = useState([
-    { name: "catbus", x: "", y: "", display: "none" },
-    { name: "makoto", x: "", y: "", display: "none" },
-    { name: "vash", x: "", y: "", display: "none" },
+    {
+      name: "catbus",
+      x: 14,
+      y: 77,
+      display: "none",
+      displayName: "Catbus",
+    },
+    {
+      name: "makoto",
+      x: 57,
+      y: 57,
+      display: "none",
+      displayName: "Makoto",
+    },
+    {
+      name: "vash",
+      x: 2,
+      y: 94,
+      display: "none",
+      displayName: "Vash",
+    },
   ]);
 
   const imageRef = useRef();
@@ -72,8 +89,6 @@ export default function Game() {
       let markersCopy = [...markers];
       markersCopy.forEach((el) => {
         if (el.name === name) {
-          el.x = position.x;
-          el.y = position.y;
           el.display = "block";
         }
       });
@@ -112,7 +127,6 @@ export default function Game() {
       time: `${minutes}:${seconds}`,
       score: `${minutes}${seconds}`,
     };
-    setTime(result);
     setDoc(doc(db, "leaderboard", name), result);
     setDisplayLeaderboard("flex");
   }
@@ -120,7 +134,7 @@ export default function Game() {
   return (
     <>
       <Leaderboard displayLeaderboard={displayLeaderboard} />
-      <Header setTime={setTime} score={score} handleEndGame={handleEndGame} />
+      <Header score={score} handleEndGame={handleEndGame} />
       <BackgroundContainer>
         <Menu
           menuPosition={menuPosition}
@@ -129,6 +143,7 @@ export default function Game() {
           handleCancel={handleCancel}
           score={score}
           position={position}
+          markers={markers}
         />
 
         <br />
